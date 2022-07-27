@@ -19,10 +19,16 @@ if($PSBoundParameters.ContainsKey('Delivery') -eq $True && $PSBoundParameters.Co
     $resolvedreports = Resolve-Path $Reports | Select-Object -ExpandProperty Path
     $exportfile = "${resolvedreports}\coding-style-reports.log"
 
+    ## Remove existing report
     if (Test-Path -Path $exportfile -PathType Leaf) {
         Remove-Item -Path $exportfile
     }
 
+    ## Pull new version of docker image and clean olds
+    docker pull ghcr.io/epitech/coding-style-checker:latest
+    docker image prune -f
+
+    ## Generate reports
     docker run --rm -it -v ${resolveddelivery}:/mnt/delivery -v ${resolvedreports}:/mnt/reports ghcr.io/epitech/coding-style-checker "/mnt/delivery" "/mnt/reports"
     if (Test-Path -Path $exportfile -PathType Leaf) {
         $filecontent = Get-Content -Path $exportfile
