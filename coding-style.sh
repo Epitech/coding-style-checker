@@ -1,5 +1,11 @@
 #!/bin/bash
 
+function my_readlink() {
+    cd $1
+    pwd
+    cd - > /dev/null
+}
+
 function cat_readme() {
     echo ""
     echo "Usage: ./coding-style.sh DELIVERY_DIR REPORTS_DIR"
@@ -13,8 +19,8 @@ if [ $# == 1 ] && [ $1 == "--help" ]; then
     cat_readme
 elif [ $# = 2 ];
 then
-    DELIVERY_DIR=$(readlink -f "$1")
-    REPORTS_DIR=$(readlink -f "$2")
+    DELIVERY_DIR=$(my_readlink "$1")
+    REPORTS_DIR=$(my_readlink "$2")
     EXPORT_FILE="$REPORTS_DIR"/coding-style-reports.log
     ### delete existing report file
     rm -f $EXPORT_FILE
