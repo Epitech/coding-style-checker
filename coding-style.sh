@@ -23,7 +23,11 @@ then
     sudo docker pull ghcr.io/epitech/coding-style-checker:latest && sudo docker image prune -f
 
     ### generate reports
-    sudo docker run --rm -i -v "$DELIVERY_DIR":"/mnt/delivery" -v "$REPORTS_DIR":"/mnt/reports" ghcr.io/epitech/coding-style-checker:latest "/mnt/delivery" "/mnt/reports"
+    SELINUX_FIX=""
+    getenforce | grep -x "Enforcing" &>/dev/null && SELINUX_FIX=":z"
+    DELIVERY_VOL="${DELIVERY_DIR}:/mnt/delivery${SELINUX_FIX}"
+    REPORTS_VOL="${REPORTS_DIR}:/mnt/reports${SELINUX_FIX}"
+    sudo docker run --rm -i -v $DELIVERY_VOL -v $REPORTS_VOL ghcr.io/epitech/coding-style-checker:latest "/mnt/delivery" "/mnt/reports"
     [[ -f $EXPORT_FILE ]] && echo "$(wc -l < $EXPORT_FILE) coding style error(s) reported in $EXPORT_FILE, $(grep -c ": MAJOR:" $EXPORT_FILE) major, $(grep -c ": MINOR:" $EXPORT_FILE) minor, $(grep -c ": INFO:" $EXPORT_FILE) info"
 else
     cat_readme
