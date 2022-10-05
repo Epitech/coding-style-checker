@@ -17,7 +17,7 @@ then
     REPORTS_DIR=$(readlink -f "$2")
     EXPORT_FILE="$REPORTS_DIR"/coding-style-reports.log
     ### delete existing report file
-    rm -f $EXPORT_FILE
+    rm -f "$EXPORT_FILE"
 
     ### Pull new version of docker image and clean olds
     sudo docker pull ghcr.io/epitech/coding-style-checker:latest && sudo docker image prune -f
