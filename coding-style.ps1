@@ -14,7 +14,7 @@ function readme {
     Write-Output ""
 }
 
-if($PSBoundParameters.ContainsKey('Delivery') -eq $True && $PSBoundParameters.ContainsKey('Reports') -eq $True) {
+if($PSBoundParameters.ContainsKey('Delivery') -eq $True -and $PSBoundParameters.ContainsKey('Reports') -eq $True) {
     $resolveddelivery = Resolve-Path $Delivery | Select-Object -ExpandProperty Path
     $resolvedreports = Resolve-Path $Reports | Select-Object -ExpandProperty Path
     $exportfile = "${resolvedreports}\coding-style-reports.log"
