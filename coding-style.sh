@@ -43,7 +43,7 @@ then
         echo "OK: Downloading image"
         $BASE_CMD pull ghcr.io/epitech/coding-style-checker:latest && $BASE_CMD image prune -f
     else
-        echo "WARNING: Skip image download..."
+        echo "WARNING: Skiping image download..."
     fi
    
 
