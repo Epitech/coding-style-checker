@@ -21,34 +21,42 @@ elif [ $# = 2 ];
 then
     DELIVERY_DIR=$(my_readlink "$1")
     REPORTS_DIR=$(my_readlink "$2")
-    SOCKET_ACCESS=$(test -r /var/run/docker.sock; echo "$?")
-    BASE_CMD="docker"
+    HAS_SOCKET_ACCESS=$(test -r /var/run/docker.sock; echo "$?")
+    GHCR_REGISTRY_TOKEN=$(curl -s "https://ghcr.io/token?service=ghcr.io&scope=repository:epitech/coding-style-checker:pull" | grep -o '"token":"[^"]*' | grep -o '[^"]*$') 
+    GHCR_REPOSITORY_STATUS=$(curl -I -f -s -o /dev/null -H "Authorization: Bearer $GHCR_REGISTRY_TOKEN" "https://ghcr.io/v2/epitech/coding-style-checker/manifests/latest" && echo 0 || echo 1)
+    BASE_EXEC_CMD="docker"
     EXPORT_FILE="$REPORTS_DIR"/coding-style-reports.log
     ### delete existing report file
     rm -f "$EXPORT_FILE"
 
     ### Pull new version of docker image and clean olds
 
-    if [ $SOCKET_ACCESS -eq 1 ]; then
-        echo "WARNING: Socket access denied... will use sudo"
-        echo "To fix this add user to docker group with : sudo usermod -a -G docker $USER"
-        BASE_CMD="sudo ${BASE_CMD}"
+    if [ $HAS_SOCKET_ACCESS -ne 0 ]; then
+        echo "WARNING: Socket access is denied"
+        echo "To fix this we will add the current user to docker group with : sudo usermod -a -G docker $USER"
+        read -p "Do you want to proceed? (yes/no) " yn
+        case $yn in 
+            yes | Y | y | Yes | YES) echo "ok, we will proceed";
+                sudo usermod -a -G docker $USER;
+                echo "You must reboot your computer for the changes to take effect";;
+            no | N | n | No | NO) echo "ok, Skipping";;
+            * ) echo "invalid response, Skipping";;
+        esac
+        BASE_EXEC_CMD="sudo ${BASE_CMD}"
     fi
 
-    echo "Check connect to ghcr.io registry..."
-    
-    echo -e "GET http://ghcr.io HTTP/1.0\n\n" | nc ghcr.io 80  > /dev/null 2>&1
 
-    if [ $? -eq 0 ]; then
-        echo "OK: Downloading image"
-        $BASE_CMD pull ghcr.io/epitech/coding-style-checker:latest && $BASE_CMD image prune -f
+    if [ $GHCR_REPOSITORY_STATUS -eq 0 ]; then
+        echo "Downloading new image and cleaning old one..."
+        $BASE_EXEC_CMD pull ghcr.io/epitech/coding-style-checker:latest && $BASE_EXEC_CMD image prune -f
+        echo "Download OK"
     else
-        echo "WARNING: Skiping image download..."
+        echo "WARNING: Skipping image download"
     fi
    
 
     ### generate reports
-    $BASE_CMD run --rm -i -v "$DELIVERY_DIR":"/mnt/delivery" -v "$REPORTS_DIR":"/mnt/reports" ghcr.io/epitech/coding-style-checker:latest "/mnt/delivery" "/mnt/reports"
+    $BASE_EXEC_CMD run --rm -i -v "$DELIVERY_DIR":"/mnt/delivery" -v "$REPORTS_DIR":"/mnt/reports" ghcr.io/epitech/coding-style-checker:latest "/mnt/delivery" "/mnt/reports"
     [[ -f "$EXPORT_FILE" ]] && echo "$(wc -l < "$EXPORT_FILE") coding style error(s) reported in "$EXPORT_FILE", $(grep -c ": MAJOR:" "$EXPORT_FILE") major, $(grep -c ": MINOR:" "$EXPORT_FILE") minor, $(grep -c ": INFO:" "$EXPORT_FILE") info"
 else
     cat_readme
