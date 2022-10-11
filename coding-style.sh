@@ -21,7 +21,8 @@ elif [ $# = 2 ];
 then
     DELIVERY_DIR=$(my_readlink "$1")
     REPORTS_DIR=$(my_readlink "$2")
-    HAS_SOCKET_ACCESS=$(test -r /var/run/docker.sock; echo "$?")
+    DOCKER_SOCKET_PATH=/var/run/docker.sock
+    HAS_SOCKET_ACCESS=$(test -r $DOCKER_SOCKET_PATH; echo "$?")
     GHCR_REGISTRY_TOKEN=$(curl -s "https://ghcr.io/token?service=ghcr.io&scope=repository:epitech/coding-style-checker:pull" | grep -o '"token":"[^"]*' | grep -o '[^"]*$') 
     GHCR_REPOSITORY_STATUS=$(curl -I -f -s -o /dev/null -H "Authorization: Bearer $GHCR_REGISTRY_TOKEN" "https://ghcr.io/v2/epitech/coding-style-checker/manifests/latest" && echo 0 || echo 1)
     BASE_EXEC_CMD="docker"
