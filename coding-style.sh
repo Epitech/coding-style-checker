@@ -43,7 +43,7 @@ then
             no | N | n | No | NO) echo "ok, Skipping";;
             * ) echo "invalid response, Skipping";;
         esac
-        BASE_EXEC_CMD="sudo ${BASE_CMD}"
+        BASE_EXEC_CMD="sudo ${BASE_EXEC_CMD}"
     fi
 
 
