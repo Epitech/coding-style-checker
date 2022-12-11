@@ -8,10 +8,10 @@ function my_readlink() {
 
 function cat_readme() {
     echo ""
-    echo "Usage: ./coding-style.sh DELIVERY_DIR REPORTS_DIR"
-    echo "       DELIVERY_DIR      Should be the directory where your project files are"
-    echo "       REPORTS_DIR       Should be the directory where we output the reports"
-    echo "                         Take note that existing reports will be overriden"
+    echo "Usage: $(basename $0) DELIVERY_DIR REPORTS_DIR"
+    echo -e "\tDELIVERY_DIR\tShould be the directory where your project files are"
+    echo -e "\tREPORTS_DIR\tShould be the directory where we output the reports"
+    echo -e "\t\t\tTake note that existing reports will be overriden"
     echo ""
 }
 
