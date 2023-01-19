@@ -27,7 +27,7 @@ if($PSBoundParameters.ContainsKey('Delivery') -eq $True -and $PSBoundParameters.
     }
 
     ## Pull new version of docker image and clean olds
-    if ($GHCR_REPOSITORY_STATUS) {
+    if ($ghcrrepositorystatus) {
         Write-Host "Downloading new image and cleaning old one..."
         docker pull ghcr.io/epitech/coding-style-checker:latest
         docker image prune -f
