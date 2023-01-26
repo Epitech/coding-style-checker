@@ -1,7 +1,7 @@
 param(
      [Parameter()]
      [string]$Delivery,
- 
+
      [Parameter()]
      [string]$Reports
  )
@@ -17,6 +17,8 @@ function readme {
 if($PSBoundParameters.ContainsKey('Delivery') -eq $True -and $PSBoundParameters.ContainsKey('Reports') -eq $True) {
     $resolveddelivery = Resolve-Path $Delivery | Select-Object -ExpandProperty Path
     $resolvedreports = Resolve-Path $Reports | Select-Object -ExpandProperty Path
+    $ghcrrepositorytoken = (Invoke-WebRequest -Uri "https://ghcr.io/token?service=ghcr.io&scope=repository:epitech/coding-style-checker:pull" | ConvertFrom-Json).token
+    $ghcrrepositorystatus = (Invoke-WebRequest -Uri "https://ghcr.io/v2/epitech/coding-style-checker/manifests/latest" -Headers @{Authorization = "Bearer $ghcrrepositorytoken"} -ErrorAction SilentlyContinue).StatusCode -eq 200
     $exportfile = "${resolvedreports}\coding-style-reports.log"
 
     ## Remove existing report
@@ -25,8 +27,14 @@ if($PSBoundParameters.ContainsKey('Delivery') -eq $True -and $PSBoundParameters.
     }
 
     ## Pull new version of docker image and clean olds
-    docker pull ghcr.io/epitech/coding-style-checker:latest
-    docker image prune -f
+    if ($ghcrrepositorystatus) {
+        Write-Host "Downloading new image and cleaning old one..."
+        docker pull ghcr.io/epitech/coding-style-checker:latest
+        docker image prune -f
+        Write-Host "Download OK"
+    } else {
+        Write-Host "WARNING: Skipping image download"
+    }
 
     ## Generate reports
     docker run --rm -it -v ${resolveddelivery}:/mnt/delivery -v ${resolvedreports}:/mnt/reports ghcr.io/epitech/coding-style-checker "/mnt/delivery" "/mnt/reports"
