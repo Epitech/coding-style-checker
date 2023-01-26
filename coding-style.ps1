@@ -31,6 +31,7 @@ if($PSBoundParameters.ContainsKey('Delivery') -eq $True -and $PSBoundParameters.
         Write-Host "Downloading new image and cleaning old one..."
         docker pull ghcr.io/epitech/coding-style-checker:latest
         docker image prune -f
+        Write-Host "Download OK"
     } else {
         Write-Host "WARNING: Skipping image download"
     }
