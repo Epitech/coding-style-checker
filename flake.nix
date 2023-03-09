@@ -43,7 +43,7 @@
               fi
 
               echo "Running norm in $project_dir"
-              files=$(find "$project_dir"  \
+              output=$(find "$project_dir"  \
                   -type f                  \
                   -not -path "*/.git/*"    \
                   -not -path "*/.idea/*"   \
@@ -51,14 +51,9 @@
                   -not -path "bonus/*"     \
                   -not -path "tests/*"     \
                   -not -path "/*build/*"   \
-              )
-
-              echo "Checking $(echo $files | wc -w) files"
-              # shellcheck disable=SC2046
-              output=$(${packages.vera}/bin/vera++  \
+              | ${packages.vera}/bin/vera++  \
                   --profile epitech                 \
-                  --root ${ruleset}/vera            \
-                  -d $(echo "$files" | tr '\n' ' ') \
+                  --root ${ruleset}/vera
               )
 
               if [ -z "$output" ]; then
