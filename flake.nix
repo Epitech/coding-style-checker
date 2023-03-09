@@ -43,33 +43,30 @@
               fi
 
               echo "Running norm in $project_dir"
-              files=$(find "$project_dir"  \
-                  -type f                  \
-                  -not -path "*/.git/*"    \
-                  -not -path "*/.idea/*"   \
-                  -not -path "*/.vscode/*" \
-                  -not -path "bonus/*"     \
-                  -not -path "tests/*"     \
-                  -not -path "/*build/*"   \
+              count=$(find "$project_dir"     \
+                -type f                       \
+                -not -path "*/.git/*"         \
+                -not -path "*/.idea/*"        \
+                -not -path "*/.vscode/*"      \
+                -not -path "bonus/*"          \
+                -not -path "tests/*"          \
+                -not -path "/*build/*"        \
+                | ${packages.vera}/bin/vera++ \
+                --profile epitech             \
+                --root ${ruleset}/vera        \
+                --error                       \
+                2>&1                          \
+                | sed "s|$project_dir/||"     \
+                | tee /dev/tty | wc -l
               )
-
-              echo "Checking $(echo $files | wc -w) files"
-              # shellcheck disable=SC2046
-              output=$(${packages.vera}/bin/vera++  \
-                  --profile epitech                 \
-                  --root ${ruleset}/vera            \
-                  -d $(echo "$files" | tr '\n' ' ') \
-              )
-
-              if [ -z "$output" ]; then
-                  echo "No issue found."
-              else
-                  escaped_path=$(echo $project_dir | sed 's/\//\\\//g')
-                  echo "$output" | sed "s/$escaped_path\///g"
-                  echo "Found $(echo "$output" | grep -c "$") issues"
-              fi
+              
+              echo "Found $count issues"
               end_time=$(date +%s%3N)
               echo "Ran in $((end_time - start_time))ms"
+              if [ $count -gt 0 ]; then
+                  exit 1
+              fi
+              exit 0
             '');
             default = report;
           };
