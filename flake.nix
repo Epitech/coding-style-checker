@@ -34,7 +34,7 @@
               ];
             };
             report = (pkgs.writeShellScriptBin "cs" ''
-              start_time=$(date +%s%3N)
+              start_time=$(date +%s)
 
               if [ -z "$1" ]; then
                   project_dir=$(pwd)
@@ -57,12 +57,12 @@
                 --error                       \
                 2>&1                          \
                 | sed "s|$project_dir/||"     \
-                | tee /dev/tty | wc -l
+                | tee /dev/stdout | wc -l
               )
               
               echo "Found $count issues"
-              end_time=$(date +%s%3N)
-              echo "Ran in $((end_time - start_time))ms"
+              end_time=$(date +%s)
+              echo "Ran in $((end_time - start_time))s"
               if [ $count -gt 0 ]; then
                   exit 1
               fi
