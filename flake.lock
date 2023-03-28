@@ -1,0 +1,77 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1676283394,
+        "narHash": "sha256-XX2f9c3iySLCw54rJ/CZs+ZK6IQy7GXNY4nSOyu2QG4=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3db36a8b464d0c4532ba1c7dda728f4576d6d073",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1678293141,
+        "narHash": "sha256-lLlQHaR0y+q6nd6kfpydPTGHhl1rS9nU9OQmztzKOYs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c90c4025bb6e0c4eaf438128a3b2640314b1c58d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "ruleset": "ruleset",
+        "vera-fork": "vera-fork"
+      }
+    },
+    "ruleset": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1669714262,
+        "narHash": "sha256-fuUN4dYEI2c51veBvyM+vzxhA4AlmbrTJ+NJOzYq3Fo=",
+        "ref": "refs/heads/main",
+        "rev": "a97bb704dd0d341128e05aaa016930e787d6bc31",
+        "revCount": 9,
+        "type": "git",
+        "url": "ssh://git@github.com/Epitech/banana-coding-style-checker.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/Epitech/banana-coding-style-checker.git"
+      }
+    },
+    "vera-fork": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1661342940,
+        "narHash": "sha256-1nAKhUltQS1301JNrr0PQQrrf2W9Hj5gk1nbUhN4cXw=",
+        "owner": "Epitech",
+        "repo": "banana-vera",
+        "rev": "3a7d18d6249cd1790cc63fb9018e0914462ec219",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Epitech",
+        "repo": "banana-vera",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
