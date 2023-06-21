@@ -57,7 +57,7 @@
                 --error                       \
                 2>&1                          \
                 | sed "s|$project_dir/||"     \
-                | tee /dev/stdout | wc -l
+                | tee /dev/sterr | wc -l
               )
               
               echo "Found $count issues"
