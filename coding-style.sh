@@ -17,10 +17,17 @@ function cat_readme() {
 
 if [ $# == 1 ] && [ $1 == "--help" ]; then
     cat_readme
-elif [ $# = 2 ];
+elif [ $# == 1 ] || [ $# = 2 ];
 then
+    if [ $# == 1 ];
+    then
+        REPORTS_DIR=$(my_readlink ".")
+    elif [ $# = 2 ];
+    then
+        REPORTS_DIR=$(my_readlink "$2")
+    fi
+
     DELIVERY_DIR=$(my_readlink "$1")
-    REPORTS_DIR=$(my_readlink "$2")
     DOCKER_SOCKET_PATH=/var/run/docker.sock
     HAS_SOCKET_ACCESS=$(test -r $DOCKER_SOCKET_PATH; echo "$?")
     GHCR_REGISTRY_TOKEN=$(curl -s "https://ghcr.io/token?service=ghcr.io&scope=repository:epitech/coding-style-checker:pull" | grep -o '"token":"[^"]*' | grep -o '[^"]*$') 
