@@ -9,7 +9,7 @@ Requirement :
 
 Use `coding-style.sh`
 
-If using Nix, you can run `nix run github:epitech/coding-style-checker` to run a script printing you the list of infractions.
+If using Nix, you can run `nix run github:epitech/coding-style-checker`
 
 ### Windows
 
@@ -26,5 +26,5 @@ Requirements :
 
 - [Nix](https://github.com/DeterminateSystems/nix-installer) installed
 
-Use `nix run github:epitech/coding-style-checker` to run a script printing you the list of infractions.
+Use `nix run github:epitech/coding-style-checker`
 (Supports both Intel and Apple Silicon)

@@ -42,8 +42,12 @@
                   project_dir="$1"
               fi
 
-              echo "Running norm in $project_dir"
-              count=$(find "$project_dir"     \
+              export_file=$project_dir/coding-style-reports.log
+
+              rm -f $export_file
+
+              echo "Running norm in $project_dir\n"
+              find "$project_dir"     \
                 -type f                       \
                 -not -path "*/.git/*"         \
                 -not -path "*/.idea/*"        \
@@ -57,10 +61,12 @@
                 --error                       \
                 2>&1                          \
                 | sed "s|$project_dir/||"     \
-                | tee /dev/stdout | wc -l
-              )
-              
-              echo "Found $count issues"
+                | tee > $export_file
+
+              count=$(wc -l < $export_file)
+
+              echo "$count coding style error(s) reported in "$export_file", $(grep -c ": MAJOR:" "$export_file") major, $(grep -c ": MINOR:" "$export_file") minor, $(grep -c ": INFO:" "$export_file") info"
+
               end_time=$(date +%s)
               echo "Ran in $((end_time - start_time))s"
               if [ $count -gt 0 ]; then
@@ -79,4 +85,3 @@
           apps.default = apps.report;
         });
 }
-
